@@ -6,7 +6,10 @@ export interface User {
     revenue: number;
     leads: number;
     kpi: number;
-    winLoss: number;
+    winLoss: {
+        win: number;
+        loss: number;
+    };
     badges: string[];
 }
 
@@ -32,7 +35,7 @@ export const users: User[] = [
         revenue: 118,
         leads: 0.84,
         kpi: 31,
-        winLoss: 29,
+        winLoss: { win: 29, loss: 12 },
         badges: [],
     },
     {
@@ -43,7 +46,7 @@ export const users: User[] = [
         revenue: 103,
         leads: 0.89,
         kpi: 39,
-        winLoss: 33,
+        winLoss: { win: 33, loss: 5 },
         badges: ["Top sales", "Sales streak", "Top review"],
     },
     {
@@ -54,7 +57,7 @@ export const users: User[] = [
         revenue: 84,
         leads: 0.79,
         kpi: 32,
-        winLoss: 15,
+        winLoss: { win: 15, loss: 24 },
         badges: [],
     },
 ];

@@ -26,6 +26,8 @@ import { cn, formatNumber, formatCurrency, formatPercentage } from "@/lib/utils"
 import Badge from "@/components/Badge";
 import { useSidebar } from "@/contexts/SidebarContext";
 import { Coffee } from "lucide-react";
+import PlatformBarChart from "@/components/PlatformBarChart";
+import { motion } from "framer-motion";
 
 // Custom component for detailed stat cards
 function MetricCard({ title, value, change, isPositive, extra }: any) {
@@ -79,6 +81,7 @@ function PlatformRow({ name, amount, percentage, color }: any) {
 
 export default function Dashboard() {
     const [expandedUser, setExpandedUser] = useState<string | null>("Mikasa A.");
+    const [activeMetric, setActiveMetric] = useState<"revenue" | "leads" | "wl">("revenue");
     const { activeTab } = useSidebar();
     const [isTimeframeOn, setIsTimeframeOn] = useState(true);
     const [isDateDropdownOpen, setIsDateDropdownOpen] = useState(false);
@@ -547,167 +550,283 @@ export default function Dashboard() {
                     {/* Platform Value - Pink Section */}
                     <div className="bg-[#ECECEC] rounded-[20px] overflow-hidden">
                         {/* Header */}
-                        <div className="p-4 pb-3 bg-[#ECECEC]">
-                            <div className="flex items-center justify-between">
+                        <div className="p-4 pb-4 sm:p-4 sm:pb-3 bg-[#F4F4F5] sm:bg-[#ECECEC]">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 sm:gap-0">
+                                {/* Section 1: Logo & Title */}
                                 <div className="flex items-center gap-3">
-                                    <div className="w-9 h-9 rounded-full bg-pink-100 flex items-center justify-center">
-                                        <Dribbble className="w-4 h-4 text-pink-500" />
+                                    <div className="w-10 h-10 sm:w-9 sm:h-9 rounded-full bg-pink-100 flex items-center justify-center">
+                                        <Dribbble className="w-5 h-5 sm:w-4 sm:h-4 text-pink-500" />
                                     </div>
                                     <div>
                                         <span className="text-neutral-400 text-xs font-medium block leading-tight">Platform value</span>
                                         <div className="flex items-center gap-1 cursor-pointer">
-                                            <span className="text-neutral-900 text-sm font-bold">Dribbble</span>
-                                            <ChevronDown className="w-3 h-3 text-neutral-500" />
+                                            <span className="text-neutral-900 text-lg sm:text-sm font-bold">Dribbble</span>
+                                            <ChevronDown className="w-4 h-4 sm:w-3 sm:h-3 text-neutral-500" />
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex gap-1.5">
-                                    <span className="bg-neutral-900 text-white px-3 py-1.5 rounded-full text-xs font-semibold cursor-pointer">Revenue</span>
-                                    <span className="bg-white text-neutral-700 px-3 py-1.5 rounded-full text-xs font-medium border border-neutral-200 cursor-pointer">Leads</span>
-                                    <span className="bg-white text-neutral-700 px-3 py-1.5 rounded-full text-xs font-medium border border-neutral-200 cursor-pointer">W/L</span>
+                                {/* Section 2: Buttons */}
+                                <div className="flex p-1 bg-white rounded-full border border-neutral-200 w-full sm:w-auto sm:bg-transparent sm:border-0 sm:rounded-none sm:p-0 sm:gap-1.5">
+                                    <motion.button
+                                        onClick={() => setActiveMetric("revenue")}
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        className={cn(
+                                            "flex-1 sm:flex-none py-2 sm:py-1.5 px-0 sm:px-3 rounded-full text-[13px] sm:text-xs font-semibold cursor-pointer transition-colors relative z-10",
+                                            activeMetric === "revenue" ? "bg-neutral-900 text-white shadow-sm" : "text-neutral-500 bg-transparent hover:bg-neutral-50 sm:bg-white sm:text-neutral-700 sm:border sm:border-neutral-200"
+                                        )}
+                                    >
+                                        Revenue
+                                    </motion.button>
+                                    <motion.button
+                                        onClick={() => setActiveMetric("leads")}
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        className={cn(
+                                            "flex-1 sm:flex-none py-2 sm:py-1.5 px-0 sm:px-3 rounded-full text-[13px] sm:text-xs font-medium cursor-pointer transition-colors relative z-10",
+                                            activeMetric === "leads" ? "bg-neutral-900 text-white shadow-sm" : "text-neutral-500 bg-transparent hover:bg-neutral-50 sm:bg-white sm:text-neutral-700 sm:border sm:border-neutral-200"
+                                        )}
+                                    >
+                                        Leads
+                                    </motion.button>
+                                    <motion.button
+                                        onClick={() => setActiveMetric("wl")}
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        className={cn(
+                                            "flex-1 sm:flex-none py-2 sm:py-1.5 px-0 sm:px-3 rounded-full text-[13px] sm:text-xs font-medium cursor-pointer transition-colors relative z-10",
+                                            activeMetric === "wl" ? "bg-neutral-900 text-white shadow-sm" : "text-neutral-500 bg-transparent hover:bg-neutral-50 sm:bg-white sm:text-neutral-700 sm:border sm:border-neutral-200"
+                                        )}
+                                    >
+                                        W/L
+                                    </motion.button>
                                 </div>
                             </div>
                         </div>
 
                         {/* Main Content Area */}
-                        <div className="flex flex-col sm:flex-row">
-                            {/* Pink Sidebar with rotated text */}
-                            <div className="bg-[#E11D48] text-white w-full sm:w-[140px] py-4 sm:py-6 px-4 relative flex flex-row sm:flex-col justify-between sm:justify-center items-center rounded-t-[20px] sm:rounded-tr-[24px] sm:rounded-tl-none sm:rounded-l-none hover:shadow-lg transition-shadow duration-300 cursor-pointer hover:brightness-105">
-                                {/* Rotated text (Desktop) / Normal text (Mobile) */}
-                                <div className="static sm:absolute sm:left-3 sm:top-1/2 sm:-translate-y-1/2 sm:-translate-x-1/2 sm:-rotate-90 origin-center whitespace-nowrap">
-                                    <span className="text-sm sm:text-base font-medium text-pink-200/70 tracking-wide">Average monthly</span>
+                        <div className="flex flex-col sm:flex-row bg-[#F4F4F5] sm:bg-[#ECECEC] p-2 pt-0 sm:p-0">
+
+                            {/* MOBILE STATS CARD (Red Ribbon) - Visible only on Mobile */}
+                            <div className="w-full h-[100px] bg-[#BE123C] rounded-[10px] flex overflow-hidden shadow-sm relative shrink-0 sm:hidden mb-6">
+                                {/* Left Strip */}
+                                <div className="w-8 h-full bg-[#9F1239] flex items-center justify-center">
+                                    <span className="text-white/80 text-[9px] uppercase tracking-wider font-semibold -rotate-90 whitespace-nowrap">Average monthly</span>
                                 </div>
-                                {/* Metrics */}
-                                <div className="flex md:flex-col gap-4 md:gap-5 ml-0 md:ml-6 items-center md:items-start overflow-x-auto">
+                                {/* Right Stats Content */}
+                                <div className="flex-1 flex items-center justify-between px-5 text-white">
+                                    <div className="flex flex-col">
+                                        <span className="text-pink-100 text-[11px] mb-0.5">Revenue</span>
+                                        <span className="text-xl font-bold tracking-tight">$18,552</span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-pink-100 text-[11px] mb-0.5">Leads</span>
+                                        <span className="text-sm font-bold">373</span>
+                                        <span className="text-[9px] text-pink-200/70">(97/276)</span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-pink-100 text-[11px] mb-0.5">Win/lose</span>
+                                        <span className="text-sm font-bold">16%</span>
+                                        <span className="text-[9px] text-pink-200/70">(51/318)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* DESKTOP SIDEBAR (Pink Grid) - Visible only on Desktop */}
+                            <div className="hidden sm:flex bg-[#E11D48] text-white w-full sm:w-[140px] py-4 sm:py-6 px-4 relative flex-col justify-center items-center rounded-t-[20px] sm:rounded-tr-[24px] sm:rounded-tl-none sm:rounded-l-none hover:shadow-lg transition-shadow duration-300 cursor-pointer hover:brightness-105">
+                                <div className="absolute left-3 top-1/2 -translate-y-1/2 -translate-x-1/2 -rotate-90 origin-center whitespace-nowrap">
+                                    <span className="text-base font-medium text-pink-200/70 tracking-wide">Average monthly</span>
+                                </div>
+                                <div className="flex flex-col gap-5 ml-6 items-start">
                                     <div>
-                                        <span className="text-[10px] md:text-sm text-pink-200/80 block mb-0.5 md:mb-1">Revenue</span>
-                                        <span className="text-lg md:text-2xl font-bold">$18,552</span>
+                                        <span className="text-sm text-pink-200/80 block mb-1">Revenue</span>
+                                        <span className="text-2xl font-bold">$18,552</span>
                                     </div>
                                     <div>
-                                        <span className="text-[10px] md:text-sm text-pink-200/80 block mb-0.5 md:mb-1">Leads</span>
-                                        <div className="flex flex-col md:block">
-                                            <span className="text-sm md:text-lg font-bold">373</span>
-                                            <span className="text-pink-200/70 font-normal text-[10px] md:text-sm ml-0 md:ml-1">97/276</span>
+                                        <span className="text-sm text-pink-200/80 block mb-1">Leads</span>
+                                        <div className="block">
+                                            <span className="text-lg font-bold">373</span>
+                                            <span className="text-pink-200/70 font-normal text-sm ml-1">97/276</span>
                                         </div>
                                     </div>
                                     <div>
-                                        <span className="text-[10px] md:text-sm text-pink-200/80 block mb-0.5 md:mb-1">Win/lose</span>
-                                        <div className="flex flex-col md:block">
-                                            <span className="text-sm md:text-lg font-bold">16%</span>
-                                            <span className="text-pink-200/70 font-normal text-[10px] md:text-sm ml-0 md:ml-1">51/318</span>
+                                        <span className="text-sm text-pink-200/80 block mb-1">Win/lose</span>
+                                        <div className="block">
+                                            <span className="text-lg font-bold">16%</span>
+                                            <span className="text-pink-200/70 font-normal text-sm ml-1">51/318</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Bar Chart Area */}
-                            <div className="flex-1 bg-[#ECECEC] p-4 pl-4 sm:pl-6 pb-3">
-                                <div className="flex h-[200px] sm:h-[240px] md:h-[200px] items-end justify-between  gap-1 sm:gap-3 relative">
+                            <div className="flex-1 bg-[#F4F4F5] sm:bg-[#ECECEC] sm:p-4 sm:pl-6 pb-3">
+                                <div className="flex h-[260px] sm:h-[240px] md:h-[200px] items-end justify-between relative">
                                     {/* Horizontal Grid Lines */}
-                                    <div className="absolute left-0 right-12 top-0 bottom-10 h-[200px] sm:h-[240px] md:h-[160px] flex flex-col justify-between pointer-events-none">
-                                        <div className="border-b border-white"></div>
-                                        <div className="border-b border-white"></div>
-                                        <div className="border-b border-white"></div>
-                                        <div className="border-b border-white"></div>
-                                        <div className="border-b border-white"></div>
+                                    <div className="absolute left-[35px] right-0 sm:left-0 sm:right-12 top-0 bottom-12 sm:bottom-10 flex flex-col justify-between pointer-events-none">
+                                        <div className="border-b border-neutral-300/50 sm:border-white"></div>
+                                        <div className="border-b border-neutral-300/50 sm:border-white"></div>
+                                        <div className="border-b border-neutral-300/50 sm:border-white"></div>
+                                        <div className="border-b border-neutral-300/50 sm:border-white"></div>
+                                        <div className="border-b border-neutral-300/50 sm:border-white"></div>
                                     </div>
 
-                                    {/* Y-axis labels */}
-                                    <div className="absolute   right-0 top-0 bottom-9 h-[200px] sm:h-[240px] md:h-[160px] flex flex-col justify-between text-xs text-neutral-400 font-medium">
-                                        <span>$14,500</span>
-                                        <span>$11,000</span>
-                                        <span>$7,500</span>
-                                        <span>$4,000</span>
-                                        <span>$0</span>
+                                    {/* Mobile Y-Axis Labels (Left Side) */}
+                                    <div className="absolute left-0 top-0 bottom-12 flex sm:hidden flex-col justify-between text-[10px] text-neutral-400 font-medium w-[30px] pr-1 text-right">
+                                        {activeMetric === "revenue" && (
+                                            <>
+                                                <span>$14k</span>
+                                                <span>$11k</span>
+                                                <span>$7.5k</span>
+                                                <span>$4k</span>
+                                                <span>$0</span>
+                                            </>
+                                        )}
+                                        {activeMetric === "leads" && (
+                                            <>
+                                                <span>300</span>
+                                                <span>225</span>
+                                                <span>150</span>
+                                                <span>75</span>
+                                                <span>0</span>
+                                            </>
+                                        )}
+                                        {activeMetric === "wl" && (
+                                            <>
+                                                <span>100%</span>
+                                                <span>75%</span>
+                                                <span>50%</span>
+                                                <span>25%</span>
+                                                <span>0%</span>
+                                            </>
+                                        )}
+                                    </div>
+
+                                    {/* Desktop Y-axis labels (Right Side) */}
+                                    <div className="absolute right-0 top-0 bottom-9 h-[200px] sm:h-[240px] md:h-[160px] hidden sm:flex flex-col justify-between text-xs text-neutral-400 font-medium pl-1">
+                                        {activeMetric === "revenue" && (
+                                            <>
+                                                <span>$14,500</span>
+                                                <span>$11,000</span>
+                                                <span>$7,500</span>
+                                                <span>$4,000</span>
+                                                <span>$0</span>
+                                            </>
+                                        )}
+                                        {activeMetric === "leads" && (
+                                            <>
+                                                <span>300</span>
+                                                <span>225</span>
+                                                <span>150</span>
+                                                <span>75</span>
+                                                <span>0</span>
+                                            </>
+                                        )}
+                                        {activeMetric === "wl" && (
+                                            <>
+                                                <span>100%</span>
+                                                <span>75%</span>
+                                                <span>50%</span>
+                                                <span>25%</span>
+                                                <span>0%</span>
+                                            </>
+                                        )}
                                     </div>
 
                                     {/* Bars Layer - positioned to align with grid */}
-                                    <div className="absolute left-0 right-12 top-0 bottom-12 h-[200px] sm:h-[240px] md:h-[160px] flex items-end justify-around">
-                                        {/* Sep Bars */}
-                                        <div className="flex items-end gap-1 relative cursor-pointer group">
-                                            <div className="w-7 h-17 rounded-t-[4px] bg-white relative overflow-hidden group-hover:opacity-90 transition-opacity">
-                                                <div className="absolute inset-0 bg-[linear-gradient(135deg,transparent_25%,rgba(0,0,0,0.04)_25%,rgba(0,0,0,0.04)_50%,transparent_50%,transparent_75%,rgba(0,0,0,0.04)_75%,rgba(0,0,0,0.04)_100%)] bg-[length:6px_6px]"></div>
-                                            </div>
-                                            <div className="w-7 h-9 rounded-t-[4px] bg-[#D5D5D5] group-hover:bg-[#c0c0c0] transition-colors"></div>
-                                            <div className="w-7 h-8 rounded-t-[4px] bg-white relative overflow-hidden group-hover:opacity-90 transition-opacity">
-                                                <div className="absolute inset-0 bg-[linear-gradient(135deg,transparent_25%,rgba(0,0,0,0.04)_25%,rgba(0,0,0,0.04)_50%,transparent_50%,transparent_75%,rgba(0,0,0,0.04)_75%,rgba(0,0,0,0.04)_100%)] bg-[length:6px_6px]"></div>
-                                            </div>
-                                            {/* Sep Label */}
-                                            <span className="absolute -top-9 left-[14px] -translate-x-1/2 text-[11px] font-bold text-white bg-[#E11D48] px-2.5 py-1 rounded-md whitespace-nowrap shadow-sm">$6,901</span>
-                                        </div>
-                                        {/* Oct Bars */}
-                                        <div className="flex items-end gap-1 relative cursor-pointer group">
-                                            <div className="w-7 h-32 rounded-t-[4px] bg-white relative overflow-hidden group-hover:opacity-90 transition-opacity">
-                                                <div className="absolute inset-0 bg-[linear-gradient(135deg,transparent_25%,rgba(0,0,0,0.04)_25%,rgba(0,0,0,0.04)_50%,transparent_50%,transparent_75%,rgba(0,0,0,0.04)_75%,rgba(0,0,0,0.04)_100%)] bg-[length:6px_6px]"></div>
-                                            </div>
-                                            <div className="w-7 h-20 rounded-t-[4px] bg-[#D5D5D5] group-hover:bg-[#c0c0c0] transition-colors"></div>
-                                            <div className="w-7 h-14 rounded-t-[4px] bg-white relative overflow-hidden group-hover:opacity-90 transition-opacity">
-                                                <div className="absolute inset-0 bg-[linear-gradient(135deg,transparent_25%,rgba(0,0,0,0.04)_25%,rgba(0,0,0,0.04)_50%,transparent_50%,transparent_75%,rgba(0,0,0,0.04)_75%,rgba(0,0,0,0.04)_100%)] bg-[length:6px_6px]"></div>
-                                            </div>
-                                            {/* Oct Label */}
-                                            <span className="absolute -top-9 left-[14px] -translate-x-1/2 text-[11px] font-bold text-white bg-[#E11D48] px-2.5 py-1 rounded-md whitespace-nowrap shadow-sm">$11,035</span>
-                                        </div>
-                                        {/* Nov Bars */}
-                                        <div className="flex items-end gap-1 relative cursor-pointer group">
-                                            <div className="w-7 h-16 rounded-t-[4px] bg-white relative overflow-hidden group-hover:opacity-90 transition-opacity">
-                                                <div className="absolute inset-0 bg-[linear-gradient(135deg,transparent_25%,rgba(0,0,0,0.04)_25%,rgba(0,0,0,0.04)_50%,transparent_50%,transparent_75%,rgba(0,0,0,0.04)_75%,rgba(0,0,0,0.04)_100%)] bg-[length:6px_6px]"></div>
-                                            </div>
-                                            <div className="w-7 h-28 rounded-t-[4px] bg-white relative overflow-hidden group-hover:opacity-90 transition-opacity">
-                                                <div className="absolute inset-0 bg-[linear-gradient(135deg,transparent_25%,rgba(0,0,0,0.04)_25%,rgba(0,0,0,0.04)_50%,transparent_50%,transparent_75%,rgba(0,0,0,0.04)_75%,rgba(0,0,0,0.04)_100%)] bg-[length:6px_6px]"></div>
-                                            </div>
-                                            <div className="w-7 h-[72px] rounded-t-[4px] bg-[#D5D5D5] group-hover:bg-[#c0c0c0] transition-colors"></div>
-                                            {/* Nov Label */}
-                                            <span className="absolute -top-9 left-1/2 -translate-x-1/2 text-[11px] font-bold text-white bg-[#E11D48] px-2.5 py-1 rounded-md whitespace-nowrap shadow-sm">$9,288</span>
-                                        </div>
-                                    </div>
+                                    <PlatformBarChart activeMetric={activeMetric} />
 
                                     {/* Avatars & Labels Layer - at the bottom */}
-                                    <div className="absolute left-0 right-12 bottom-0 top-40 h-[200px] sm:h-[240px] md:h-[160px] flex items-start justify-around">
-                                        {/* Sep Group */}
-                                        <div className="flex flex-col items-center gap-3">
+                                    {/* Avatars & Labels Layer - at the bottom */}
+                                    <div className="absolute left-[35px] right-0 sm:left-0 sm:right-12 bottom-0 h-12 flex items-end justify-around pb-1 sm:pb-0">
+
+                                        {/* ================= MOBILE AVATARS (Aligned 1:1) ================= */}
+                                        {/* Sep Group (Mobile) */}
+                                        <div className="flex sm:hidden flex-col items-center gap-1">
+                                            <div className="flex items-end gap-[2px]">
+                                                {['1599566150163-29194dcaad36', '1535713875002-d1d0cf377fde', '1527980965255-d3b416303d12'].map((id, i) => (
+                                                    <div key={i} className="w-4 h-4 rounded-full overflow-hidden border border-white shadow-sm flex-shrink-0">
+                                                        <img src={`https://images.unsplash.com/photo-${id}?w=50&h=50&fit=crop`} className="w-full h-full object-cover" />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <span className="text-[9px] text-neutral-400 font-medium">Sep</span>
+                                        </div>
+
+                                        {/* Oct Group (Mobile) */}
+                                        <div className="flex sm:hidden flex-col items-center gap-1">
+                                            <div className="flex items-end gap-[2px]">
+                                                {['1494790108377-be9c29b29330', '1507003211169-0a1dd7228f2d', '1438761681033-6461ffad8d80'].map((id, i) => (
+                                                    <div key={i} className="w-4 h-4 rounded-full overflow-hidden border border-white shadow-sm flex-shrink-0">
+                                                        <img src={`https://images.unsplash.com/photo-${id}?w=50&h=50&fit=crop`} className="w-full h-full object-cover" />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <span className="text-[9px] text-neutral-400 font-medium">Oct</span>
+                                        </div>
+
+                                        {/* Nov Group (Mobile) */}
+                                        <div className="flex sm:hidden flex-col items-center gap-1">
+                                            <div className="flex items-end gap-[2px]">
+                                                {['1500648767791-00dcc994a43e', '1544005313-94ddf0286df2', '1552058544-f2b08422138a'].map((id, i) => (
+                                                    <div key={i} className="w-4 h-4 rounded-full overflow-hidden border border-white shadow-sm flex-shrink-0">
+                                                        <img src={`https://images.unsplash.com/photo-${id}?w=50&h=50&fit=crop`} className="w-full h-full object-cover" />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <span className="text-[9px] text-neutral-400 font-medium">Nov</span>
+                                        </div>
+
+
+                                        {/* ================= DESKTOP AVATARS (Overlapping) ================= */}
+                                        {/* Sep Group (Desktop) */}
+                                        <div className="hidden sm:flex flex-col items-center gap-3">
                                             <div className="flex items-center gap-2">
-                                                <div className="w-6 h-6 rounded-full bg-neutral-600 border-2 border-white shadow-sm overflow-hidden">
+                                                <motion.div whileHover={{ scale: 1.2, zIndex: 10 }} className="w-6 h-6 rounded-full bg-neutral-600 border-2 border-white shadow-sm overflow-hidden cursor-pointer relative">
                                                     <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=50&h=50&fit=crop" alt="" className="w-full h-full object-cover" />
-                                                </div>
-                                                <div className="w-6 h-6 rounded-full bg-neutral-600 border-2 border-white shadow-sm overflow-hidden">
+                                                </motion.div>
+                                                <motion.div whileHover={{ scale: 1.2, zIndex: 10 }} className="w-6 h-6 rounded-full bg-neutral-600 border-2 border-white shadow-sm overflow-hidden cursor-pointer relative">
                                                     <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=50&h=50&fit=crop" alt="" className="w-full h-full object-cover" />
-                                                </div>
-                                                <div className="w-6 h-6 rounded-full bg-neutral-600 border-2 border-white shadow-sm overflow-hidden">
+                                                </motion.div>
+                                                <motion.div whileHover={{ scale: 1.2, zIndex: 10 }} className="w-6 h-6 rounded-full bg-neutral-600 border-2 border-white shadow-sm overflow-hidden cursor-pointer relative">
                                                     <img src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=50&h=50&fit=crop" alt="" className="w-full h-full object-cover" />
-                                                </div>
+                                                </motion.div>
                                             </div>
                                             <span className="text-xs text-neutral-400 font-medium">Sep</span>
                                         </div>
-                                        {/* Oct Group */}
-                                        <div className="flex flex-col items-center gap-3">
+
+                                        {/* Oct Group (Desktop) */}
+                                        <div className="hidden sm:flex flex-col items-center gap-3">
                                             <div className="flex items-center gap-1">
-                                                <div className="w-6 h-6 rounded-full bg-neutral-600 border-2 border-white shadow-sm overflow-hidden">
+                                                <motion.div whileHover={{ scale: 1.2, zIndex: 10 }} className="w-6 h-6 rounded-full bg-neutral-600 border-2 border-white shadow-sm overflow-hidden cursor-pointer relative">
                                                     <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop" alt="" className="w-full h-full object-cover" />
-                                                </div>
-                                                <div className="w-6 h-6 rounded-full bg-[#0EA5E9] border-[3px] border-[#0EA5E9] shadow-sm overflow-hidden">
+                                                </motion.div>
+                                                <motion.div whileHover={{ scale: 1.2, zIndex: 10 }} className="w-6 h-6 rounded-full bg-[#0EA5E9] border-[3px] border-[#0EA5E9] shadow-sm overflow-hidden cursor-pointer relative">
                                                     <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop" alt="" className="w-full h-full object-cover" />
-                                                </div>
-                                                <div className="w-6 h-6 rounded-full bg-neutral-600 border-2 border-white shadow-sm overflow-hidden">
+                                                </motion.div>
+                                                <motion.div whileHover={{ scale: 1.2, zIndex: 10 }} className="w-6 h-6 rounded-full bg-neutral-600 border-2 border-white shadow-sm overflow-hidden cursor-pointer relative">
                                                     <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop" alt="" className="w-full h-full object-cover" />
-                                                </div>
+                                                </motion.div>
                                             </div>
                                             <span className="text-xs text-neutral-400 font-medium">Oct</span>
                                         </div>
-                                        {/* Nov Group */}
-                                        <div className="flex flex-col items-center gap-3">
+
+                                        {/* Nov Group (Desktop) */}
+                                        <div className="hidden sm:flex flex-col items-center gap-3">
                                             <div className="flex items-center gap-1">
-                                                <div className="w-6 h-6 rounded-full bg-neutral-600 border-2 border-white shadow-sm overflow-hidden">
+                                                <motion.div whileHover={{ scale: 1.2, zIndex: 10 }} className="w-6 h-6 rounded-full bg-neutral-600 border-2 border-white shadow-sm overflow-hidden cursor-pointer relative">
                                                     <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=50&h=50&fit=crop" alt="" className="w-full h-full object-cover" />
-                                                </div>
-                                                <div className="w-6 h-6 rounded-full bg-[#0EA5E9] border-[3px] border-[#0EA5E9] shadow-sm overflow-hidden">
+                                                </motion.div>
+                                                <motion.div whileHover={{ scale: 1.2, zIndex: 10 }} className="w-6 h-6 rounded-full bg-[#0EA5E9] border-[3px] border-[#0EA5E9] shadow-sm overflow-hidden cursor-pointer relative">
                                                     <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=50&h=50&fit=crop" alt="" className="w-full h-full object-cover" />
-                                                </div>
-                                                <div className="w-6 h-6 rounded-full bg-neutral-600 border-2 border-white shadow-sm overflow-hidden">
+                                                </motion.div>
+                                                <motion.div whileHover={{ scale: 1.2, zIndex: 10 }} className="w-6 h-6 rounded-full bg-neutral-600 border-2 border-white shadow-sm overflow-hidden cursor-pointer relative">
                                                     <img src="https://images.unsplash.com/photo-1552058544-f2b08422138a?w=50&h=50&fit=crop" alt="" className="w-full h-full object-cover" />
-                                                </div>
+                                                </motion.div>
                                             </div>
                                             <span className="text-xs text-neutral-400 font-medium">Nov</span>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -978,7 +1097,7 @@ export default function Dashboard() {
                                             </button>
                                         </div>
                                         {/* Chart */}
-                                        <div className="h-20 relative hidden xl:block">
+                                        <div className="h-20 relative">
                                             {/* Grid Lines/Labels */}
                                             <div className="absolute top-0 left-0 right-0 flex justify-between text-[10px] text-neutral-400 font-medium px-2">
                                                 <span>W 1</span>
@@ -998,9 +1117,9 @@ export default function Dashboard() {
                                             </div>
 
                                             {/* Chart Path - Simplified Wave */}
-                                            <svg className="absolute inset-0 top-6 w-full h-[60px] overflow-visible" preserveAspectRatio="none">
+                                            <svg className="absolute inset-0 top-6 w-full h-[60px] overflow-visible" preserveAspectRatio="none" viewBox="0 0 400 60">
                                                 <path d="M0,50 C20,50 30,40 50,45 C70,50 80,30 100,35 C120,40 130,20 150,25 C170,30 180,45 200,40 C220,35 230,50 250,45 C270,40 280,30 300,35 C320,40 330,25 350,30 C370,35 380,20 400,25" fill="none" stroke="#F43F5E" strokeWidth="2" strokeLinecap="round" />
-                                                <path d="M0,55 C20,55 30,45 50,50 C70,55 80,45 100,50 C120,55 130,45 150,50 C170,55 180,60 200,55 C220,50 230,60 250,55 C270,50 280,45 300,50 C320,55 330,45 350,50 C370,55 380,45 400,50" fill="none" stroke="#FDA4AF" strokeWidth="1.5" strokeDasharray="3 3" />
+                                                <path d="M0,50 C20,50 30,42 50,45 C70,50 80,40 100,45 C120,50 130,40 150,45 C170,50 180,52 200,48 C220,45 230,52 250,48 C270,45 280,40 300,45 C320,50 330,40 350,45 C370,50 380,40 400,45" fill="none" stroke="#FDA4AF" strokeWidth="1.5" strokeDasharray="3 3" />
                                             </svg>
 
                                             {/* Bottom Avatars Track */}
@@ -1088,6 +1207,6 @@ export default function Dashboard() {
 
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
